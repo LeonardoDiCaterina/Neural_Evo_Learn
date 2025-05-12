@@ -1,6 +1,7 @@
 import torch
 from sklearn.model_selection import train_test_split
 import pandas as pd
+import numpy as np
 def feature_engineering(data, manual_row_removal=False):
     y = data['CRUDE PROTEIN'] 
     X = data.drop(columns=['CRUDE PROTEIN', 'WING TAG', 'EMPTY MUSCULAR STOMACH'])
@@ -14,9 +15,24 @@ def feature_engineering(data, manual_row_removal=False):
 
 
 def preprocess_data(X, y):
-    # convert it to tensors
-    X = torch.tensor(X.values, dtype=torch.float32)
-    y = torch.tensor(y.values, dtype=torch.float32)
+    
+    # RE THY ALREADY TENSORS
+    if isinstance(X, torch.Tensor) and isinstance(y, torch.Tensor):
+        return X, y
+    
+    if isinstance(X, pd.DataFrame) and isinstance(y, pd.Series):
+        X = torch.tensor(X.values, dtype=torch.float32)
+        y = torch.tensor(y.values, dtype=torch.float32)
+    elif isinstance(X, np.ndarray) and isinstance(y, np.ndarray):
+        X = torch.tensor(X, dtype=torch.float32)
+        y = torch.tensor(y, dtype=torch.float32)
+    else:
+        try:
+            X = torch.tensor(X, dtype=torch.float32)
+            y = torch.tensor(y, dtype=torch.float32)
+        except Exception as e:
+            raise TypeError(f"Unsupported data type: {type(X)}. Expected pd.DataFrame, np.ndarray, or torch.Tensor.")
+    
     return X, y
 
 
