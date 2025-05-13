@@ -5,3 +5,4 @@ tests/__pycache__
 test_notebook.ipynb
 utils/__pycache__/__init__.cpython-312.pyc
 utils/__pycache__/grid_search_v2_leo.cpython-312.pyc
+utils/__pycache__/prep_data.cpython-312.pyc

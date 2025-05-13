@@ -5,6 +5,7 @@ import json
 import datetime
 from pathlib import Path
 from typing import Union, Optional
+import tqdm
 
 
 from typing import Union, Callable, Optional
@@ -20,7 +21,8 @@ MODEL_REGISTRY = {
     "linear regression": LinearRegression,
     "logistic regression": LogisticRegression,
     "random forest": RandomForestRegressor,
-    "svm": SVC
+    "svm": SVC,
+    'gp': gp,
 }
 
 
@@ -29,7 +31,7 @@ def montecarlo_cv(
     X,
     y,
     params: dict,
-    n_splits: int = 5,
+    n_splits: int = 30, #magic statistician number :)
     test_size: float = 0.2,
     seed: int = 1,
     scorer: Optional[Callable] = None
@@ -91,7 +93,6 @@ def grid_search(
     best_score = float("inf") if minimize else float("-inf")
     best_params = None
     history = []
-    import tqdm
     
     for combo in tqdm.tqdm(param_combinations, desc="Grid Search Progress", unit="combination"):
         params = dict(zip(param_keys, combo))
