@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 def feature_engineering(data, manual_row_removal=False):
     y = data['CRUDE PROTEIN'] 
+    # ⁠ ⁠feature selection justified by overfitting tendency with high dimensional datasets (said in class)
     X = data.drop(columns=['CRUDE PROTEIN', 'WING TAG', 'EMPTY MUSCULAR STOMACH'])
     
     if isinstance(manual_row_removal, list):
