@@ -79,14 +79,14 @@ def group_and_median_rmse(results_data):
 def gp_nested_cross_validation(
     X,
     y,
-    gp_model,
-    k_outer,
-    k_inner,
-    fixed_params,
-    param_grid,
-    seed,
-    LOG_DIR,
-    DATASET_NAME,
+    gp_model: callable,
+    k_outer: int,
+    k_inner: int,
+    fixed_params: dict,
+    param_grid: dict,
+    seed: int,
+    LOG_DIR: str,
+    DATASET_NAME: str,
 ):
     """
     Perform nested cross-validation for a given model and dataset.
@@ -137,6 +137,7 @@ def gp_nested_cross_validation(
                 f"Training shape: {X_inner_train.shape}\nValidation shape: {X_inner_val.shape}\n"
             )
 
+            # Update the X and y values in the fixed_params dictionary
             fixed_params.update(
                 {
                     "X_train": X_inner_train,
@@ -146,7 +147,8 @@ def gp_nested_cross_validation(
                 }
             )
 
-            LOG_PATH = LOG_DIR + "slim_" + DATASET_NAME + "_" + str(k_inner) + ".csv"
+            # Update LOG_PATH in the fixed_params dictionary
+            LOG_PATH = LOG_DIR + DATASET_NAME + "_" + "inner" + "_" + str(j) + ".csv"
             if os.path.exists(LOG_PATH):
                 os.remove(LOG_PATH)
             fixed_params.update({"log_path": LOG_PATH})
@@ -183,6 +185,12 @@ def gp_nested_cross_validation(
                 "y_test": y_test,
             }
         )
+
+        LOG_PATH = LOG_DIR + DATASET_NAME + "_" + "outer" + "_" + str(i) + ".csv"
+        if os.path.exists(LOG_PATH):
+            os.remove(LOG_PATH)
+
+        fixed_params.update({"log_path": LOG_PATH})
 
         full_params = {**fixed_params, **best_hyper_combo}
 
