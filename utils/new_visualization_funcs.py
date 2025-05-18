@@ -34,7 +34,7 @@ def test_best_combs(model_name):
         ))
 
     fig.update_layout(
-        title= model_name +' dataset',
+        title= model_name +' - Best Combinations',
         xaxis_title='',
         yaxis_title='Test RMSE',
         height=500, width=1100,
@@ -76,7 +76,7 @@ def train_test_best_combs(model_name):
         ), row=i+1, col=1)
 
     fig.update_layout(
-        title_text=model_name + ' dataset',
+        title_text=model_name + ' - Best Combinations',
         height=300 * len(test_rmse_by_config.keys()),  # Dynamic height based on number of subplots
         width=1100,
         margin=dict(l=50, r=50, t=100, b=50),  # Adjust margins
@@ -97,3 +97,55 @@ def train_test_best_combs(model_name):
     )
 
     fig.show()
+
+
+def fit_and_size_per_outer(k_outer, model_name):
+    LOG_DIR = './log/' + model_name + '/' + model_name +'_sustavianfeed'
+    for i_outer in range(k_outer):
+        LOG_PATH = LOG_DIR + f'_outer_{i_outer}.csv'
+        df = pd.read_csv(LOG_PATH, header=None)
+
+        fig = make_subplots(
+            rows=1, cols=2,
+            subplot_titles=(f'Fitness evolution', f'Size evolution'),
+            horizontal_spacing =0.15
+        )
+
+        fig.add_trace(go.Scatter(y=df.iloc[:,5].values, 
+                                mode='lines', name='Train', line=dict(color='orange')), row=1, col=1)
+        fig.add_trace(go.Scatter(y=df.iloc[:,8].values, 
+                                mode='lines', name='Test', line=dict(color='blue')), row=1, col=1)
+        fig.add_trace(go.Scatter(y=df.iloc[:,9].values, 
+                                mode='lines', name='Size'), row=1, col=2)
+        fig.update_layout(
+            width=1000,
+            height=400, 
+            showlegend=True,
+            yaxis_range=[0,None],
+            legend=dict(
+                orientation='h',
+                yanchor='bottom',
+                y=-0.3,
+                xanchor='center',
+                x=0.5
+            ),
+            title_text=f"{model_name} - Outer Fold {i_outer}",
+            title_x=0.5,  # Center title
+            title_font=dict(size=18),  # Bigger font
+            margin=dict(t=100)
+        )
+
+        fig.update_yaxes(
+            title_text="RMSE",  # First y-axis title
+            row=1, col=1
+        )
+        
+        fig.update_yaxes(
+            title_text="Size",
+            type = "log",  #Logarithmic scale to handle the large numbers better
+            tickformat=".1e",  # Scientific notation with 2 decimal places
+            exponentformat="power",  # Shows as ×10ⁿ instead of en
+            row=1, col=2
+        )
+
+        fig.show()
