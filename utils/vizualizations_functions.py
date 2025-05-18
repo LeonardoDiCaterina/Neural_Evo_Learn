@@ -54,10 +54,10 @@ def make_evolution_plots(n_rows, n_cols, slim_versions, df_log, plot_title, var=
         
         # Plot data
         df_plot = pd.DataFrame({
-            'x': df_log[df_log[0]==sv].iloc[:, 4],
-            'rmse': df_log[df_log[0]==sv].iloc[:, 5],
-            'rmse_val': df_log[df_log[0]==sv].iloc[:, 8],
-            'size': df_log[df_log[0]==sv].iloc[:, 9]
+            'x': df_log[df_log[13]==sv].iloc[:, 4],
+            'rmse': df_log[df_log[13]==sv].iloc[:, 5],
+            'rmse_val': df_log[df_log[13]==sv].iloc[:, 8],
+            'size': df_log[df_log[13]==sv].iloc[:, 9]
         })
         agg = df_plot.groupby('x')[var].agg(['mean', 'std']).reset_index()
         agg['y_upper'] = agg['mean'] + agg['std']
@@ -124,8 +124,8 @@ def make_evolution_plots(n_rows, n_cols, slim_versions, df_log, plot_title, var=
         
     fig.update_layout(
         title_text=plot_title,
-        xaxis_title='',
-        yaxis_title='',
+        xaxis_title='Generations',
+        yaxis_title='RMSE',
         height=700,
         width=1100,
         legend=dict(
