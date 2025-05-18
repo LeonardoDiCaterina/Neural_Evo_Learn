@@ -1,0 +1,11 @@
+model,rmse_train,rmse_test,dynamic_params
+<slim_gsgp.algorithms.GP.representations.tree.Tree object at 0x000001A9831CDF40>,9.175992965698242,16.285003662109375,"{'p_xo': 0.7, 'tournament_size': 3, 'prob_const': 0.1}"
+<slim_gsgp.algorithms.GP.representations.tree.Tree object at 0x000001A9831CEA80>,6.16064977645874,5.032559394836426,"{'p_xo': 0.7, 'tournament_size': 3, 'prob_const': 0.1}"
+<slim_gsgp.algorithms.GP.representations.tree.Tree object at 0x000001A983AB4290>,10.876688957214355,13.060629844665527,"{'p_xo': 0.7, 'tournament_size': 2, 'prob_const': 0.1}"
+<slim_gsgp.algorithms.GP.representations.tree.Tree object at 0x000001A983AB5FD0>,4.2199931144714355,4.202205657958984,"{'p_xo': 0.5, 'tournament_size': 2, 'prob_const': 0.1}"
+<slim_gsgp.algorithms.GP.representations.tree.Tree object at 0x000001A9831CF920>,2.937380313873291,2.289344549179077,"{'p_xo': 0.5, 'tournament_size': 2, 'prob_const': 0.1}"
+<slim_gsgp.algorithms.GP.representations.tree.Tree object at 0x000001A9831CE450>,8.885775566101074,8.449972152709961,"{'p_xo': 0.5, 'tournament_size': 4, 'prob_const': 0.7}"
+<slim_gsgp.algorithms.GP.representations.tree.Tree object at 0x000001A9831CEF00>,3.3555426597595215,4.103642463684082,"{'p_xo': 0.5, 'tournament_size': 2, 'prob_const': 0.7}"
+<slim_gsgp.algorithms.GP.representations.tree.Tree object at 0x000001A9831CE600>,3.468064546585083,4.084192752838135,"{'p_xo': 0.5, 'tournament_size': 2, 'prob_const': 0.7}"
+<slim_gsgp.algorithms.GP.representations.tree.Tree object at 0x000001A9831CF6E0>,5.932021617889404,6.19167947769165,"{'p_xo': 0.7, 'tournament_size': 3, 'prob_const': 0.1}"
+<slim_gsgp.algorithms.GP.representations.tree.Tree object at 0x000001A983AB5F40>,11.122360229492188,10.312318801879883,"{'p_xo': 0.5, 'tournament_size': 3, 'prob_const': 0.7}"
