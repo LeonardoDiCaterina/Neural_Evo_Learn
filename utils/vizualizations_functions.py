@@ -201,7 +201,7 @@ def test_best_combs(k_outer, model_name = 'SLIM-GSGP'):
         height=500, width=1100,
         yaxis_range=[0,None],
         margin=dict(l=50, r=50, t=50, b=20),
-        showlegend=False,
+        showlegend=True,
         template='plotly_white'
     )
 
@@ -236,22 +236,24 @@ def train_test_best_combs(k_outer, n_rows, n_cols, model_name = 'SLIM-GSGP'):
         col = i % n_cols + 1
 
         fig.add_trace(
-        go.Scatter(y=train_rmse_by_config[config], mode='lines', name='Train', line=dict(color='orange'), text=config),
+        go.Scatter(y=train_rmse_by_config[config], mode='markers', name='Train', 
+                   marker=dict(color='orange', size=8), text=config),
                 row=row, col=col
                 )
     
         fig.add_trace(
-        go.Scatter(y=test_rmse_by_config[config], mode='lines', name='Test', line=dict(color='blue'), text=config)
+        go.Scatter(y=test_rmse_by_config[config], mode='markers', name='Test', 
+                   marker=dict(color='blue', size=8), text=config)
                 )
 
     fig.update_layout(
         title= model_name +' dataset',
-        xaxis_title='',
+        xaxis_title='outer fold',
         yaxis_title='RMSE',
         height=500, width=1100,
         yaxis_range=[0,None],
         margin=dict(l=50, r=50, t=50, b=20),
-        showlegend=False,
+        showlegend=True,
         template='plotly_white'
     )
 
@@ -305,8 +307,7 @@ def train_test_fit(df, train_color='blue', test_color='orange', rows=5, cols=4):
     fig.show()
 
 
-def train_test_fit_and_size1(df, comb_idxs: list | int = [i for i in range(pd.DataFrame(df[1].unique()).shape[0])],
-                            train_color='blue', test_color='orange'):
+def train_test_fit_and_size1(df, comb_idxs: list | int, train_color='blue', test_color='orange'):
      unique_setting_df = pd.DataFrame(df[1].unique())
      for comb_idx in comb_idxs:
           comb = unique_setting_df.iloc[comb_idx, 0]
@@ -370,7 +371,7 @@ def niche_entropy(df, train_color='blue', rows=5, cols=4):
     fig.show()
 
 
-def plot_combs_together_test(df, comb_idxs: list | int = [i for i in range(pd.DataFrame(df[1].unique()).shape[0])],
+def plot_combs_together_test(df, comb_idxs: list | int,
                              colors = ['#FF0000', '#0000FF', '#00FF00', '#FFA500', '#800080', 
                                        '#FF00FF', '#00FFFF', '#FFFF00', '#1F77B4', '#FF7F0E',
                                        '#2CA02C', '#D62728', '#9467BD', '#8C564B', '#E377C2',
