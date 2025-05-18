@@ -148,7 +148,19 @@ def gp_nested_cross_validation(
             )
 
             # Update LOG_PATH in the fixed_params dictionary
-            LOG_PATH = LOG_DIR + DATASET_NAME + "_" + "inner" + "_" + str(j) + ".csv"
+            LOG_PATH = (
+                LOG_DIR
+                + DATASET_NAME
+                + "_"
+                + "outer"
+                + "_"
+                + str(i)
+                + "_"
+                + "inner"
+                + "_"
+                + str(j)
+                + ".csv"
+            )
             if os.path.exists(LOG_PATH):
                 os.remove(LOG_PATH)
             fixed_params.update({"log_path": LOG_PATH})
@@ -189,12 +201,16 @@ def gp_nested_cross_validation(
         LOG_PATH = LOG_DIR + DATASET_NAME + "_" + "outer" + "_" + str(i) + ".csv"
         if os.path.exists(LOG_PATH):
             os.remove(LOG_PATH)
-
         fixed_params.update({"log_path": LOG_PATH})
 
         full_params = {**fixed_params, **best_hyper_combo}
 
         outer_model = gp_model(**full_params, seed=(seed + k_outer))
+
+        # Add the best hyperparameters to the log .csv
+        df = pd.read_csv(LOG_PATH)
+        df["params"] = best_hyper_combo
+        df.to_csv(LOG_PATH, index=False, header=None)
 
         res = {"model": outer_model}
         res.update({"rmse_train": outer_model.fitness.item()})
