@@ -336,7 +336,7 @@ def fit_and_size_per_comb(k_outer, model_name, n_rows, n_cols, size=False):
 
     assert (
         len(unique_comb_list) == n_rows * n_cols
-    ), "The number of combinations does not correspond to the grid size defined (rows/cols)."
+    ), f"The number of combinations ({len(unique_comb_list)}) does not correspond to the grid size defined (rows/cols)."
 
     make_evolution_plots(
         n_rows=n_rows,
@@ -382,13 +382,15 @@ def niche_entropy(k_outer, model_name, rows=5, cols=2):
     for i_outer in range(k_outer):
         LOG_PATH = LOG_DIR + f"_outer_{i_outer}.csv"
         df = pd.read_csv(LOG_PATH, header=None)
-        y = df
+        div_vector_log = df.iloc[:,10].values
+        #div_vector_values = np.array([float(x.replace('tensor(', '').replace(')', '')) for x in div_vector_log])
+
         row = (i_outer // cols) + 1
         col = (i_outer % cols) + 1
 
         fig.add_trace(
             go.Scatter(
-                y=y.iloc[:, 10].values,
+                y=div_vector_values,
                 mode="lines",
                 name="Niche Entropy",
                 line=dict(color="orange"),
@@ -397,12 +399,14 @@ def niche_entropy(k_outer, model_name, rows=5, cols=2):
             row=row,
             col=col,
         )
-
+        
         fig.update_layout(
             height=150 * rows,
             width=250 * cols,
             margin=dict(t=50),
-            title_text=f"{model_name} - Niche Entropy (x=Generation, y=Entropy)",
+            title_text=f"{model_name} - Niche Entropy/Pop Semantic Diversity (x=Generation, y=Entropy)",
+            #yaxis_range=[0,None],
+            #xaxis_title='Generation', yaxis_title='Semantic Diversity'
         )
 
     fig.show()
