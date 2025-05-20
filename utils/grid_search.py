@@ -4,6 +4,7 @@ import itertools
 import json
 import os
 import statistics
+import pandas as pd
 
 # Third-party imports
 
@@ -147,6 +148,13 @@ def gp_nested_cross_validation(
                 }
             )
 
+            # Remove inner log
+            fixed_params.update(
+                {
+                    "log_level": 0,
+                }
+            )
+
             # Update LOG_PATH in the fixed_params dictionary
             LOG_PATH = (
                 LOG_DIR
@@ -195,6 +203,13 @@ def gp_nested_cross_validation(
                 "y_train": y_learning,
                 "X_test": X_test,
                 "y_test": y_test,
+            }
+        )
+
+        # Added outer log
+        fixed_params.update(
+            {
+                "log_level": 2,
             }
         )
 
