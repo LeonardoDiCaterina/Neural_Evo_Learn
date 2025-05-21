@@ -155,24 +155,7 @@ def gp_nested_cross_validation(
                 }
             )
 
-            # Update LOG_PATH in the fixed_params dictionary
-            LOG_PATH = (
-                LOG_DIR
-                + DATASET_NAME
-                + "_"
-                + "outer"
-                + "_"
-                + str(i)
-                + "_"
-                + "inner"
-                + "_"
-                + str(j)
-                + ".csv"
-            )
-            if os.path.exists(LOG_PATH):
-                os.remove(LOG_PATH)
-            fixed_params.update({"log_path": LOG_PATH})
-
+            # Run inner grid search to find the best hyperparameters
             res = fit_model_GridSearch(
                 gp_model=gp_model,
                 fixed_params=fixed_params,
@@ -185,7 +168,7 @@ def gp_nested_cross_validation(
 
         medians = group_and_median_rmse(results)
 
-        # Find minimum median rmse
+        # Find the hypermeters that minimizes median rmse
         best_dynamic_combo_median = min(medians, key=lambda x: x["rmse_test_median"])
 
         print(
@@ -223,9 +206,9 @@ def gp_nested_cross_validation(
         outer_model = gp_model(**full_params, seed=(seed + k_outer))
 
         # Add the best hyperparameters to the log .csv
-        df = pd.read_csv(LOG_PATH)
-        df["params"] = best_hyper_combo
-        df.to_csv(LOG_PATH, index=False, header=None)
+        df = pd.read_csv(LOG_PATH, header=None)
+        df["params"] = str(best_hyper_combo)
+        df.to_csv(LOG_PATH, index=False, header=False)
 
         res = {"model": outer_model}
         res.update({"rmse_train": outer_model.fitness.item()})
