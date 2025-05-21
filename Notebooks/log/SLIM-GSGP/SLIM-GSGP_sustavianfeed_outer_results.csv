@@ -1,0 +1,11 @@
+model,rmse_train,rmse_test,dynamic_params
+<slim_gsgp.algorithms.SLIM_GSGP.representations.individual.Individual object at 0x00000183A1EE6150>,12.637263298034668,26.8979549407959,"{'max_depth': 10, 'tournament_size': 2, 'prob_const': 0.7, 'slim_version': 'SLIM*ABS'}"
+<slim_gsgp.algorithms.SLIM_GSGP.representations.individual.Individual object at 0x00000183A18F9E90>,14.414572715759277,16.351947784423828,"{'max_depth': 10, 'tournament_size': 2, 'prob_const': 0.7, 'slim_version': 'SLIM*ABS'}"
+<slim_gsgp.algorithms.SLIM_GSGP.representations.individual.Individual object at 0x00000183A18AC310>,14.448396682739258,16.2657527923584,"{'max_depth': 15, 'tournament_size': 2, 'prob_const': 0.7, 'slim_version': 'SLIM*ABS'}"
+<slim_gsgp.algorithms.SLIM_GSGP.representations.individual.Individual object at 0x00000183A158D5A0>,14.755481719970703,13.460366249084473,"{'max_depth': 10, 'tournament_size': 5, 'prob_const': 0.7, 'slim_version': 'SLIM*ABS'}"
+<slim_gsgp.algorithms.SLIM_GSGP.representations.individual.Individual object at 0x00000183A1971910>,15.279260635375977,6.734360218048096,"{'max_depth': 10, 'tournament_size': 5, 'prob_const': 0.7, 'slim_version': 'SLIM*SIG1'}"
+<slim_gsgp.algorithms.SLIM_GSGP.representations.individual.Individual object at 0x00000183A19705D0>,14.716257095336914,10.286547660827637,"{'max_depth': 10, 'tournament_size': 2, 'prob_const': 0.7, 'slim_version': 'SLIM*SIG2'}"
+<slim_gsgp.algorithms.SLIM_GSGP.representations.individual.Individual object at 0x00000183A1970470>,14.134674072265625,14.942418098449707,"{'max_depth': 10, 'tournament_size': 2, 'prob_const': 0.7, 'slim_version': 'SLIM*SIG2'}"
+<slim_gsgp.algorithms.SLIM_GSGP.representations.individual.Individual object at 0x00000183A1918100>,13.735713005065918,11.293352127075195,"{'max_depth': 15, 'tournament_size': 2, 'prob_const': 0.7, 'slim_version': 'SLIM*SIG2'}"
+<slim_gsgp.algorithms.SLIM_GSGP.representations.individual.Individual object at 0x00000183A1972830>,14.71176528930664,11.431105613708496,"{'max_depth': 10, 'tournament_size': 5, 'prob_const': 0.7, 'slim_version': 'SLIM*ABS'}"
+<slim_gsgp.algorithms.SLIM_GSGP.representations.individual.Individual object at 0x00000183A1EE71D0>,14.535831451416016,15.147391319274902,"{'max_depth': 10, 'tournament_size': 5, 'prob_const': 0.7, 'slim_version': 'SLIM*ABS'}"
