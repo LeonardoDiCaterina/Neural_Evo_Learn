@@ -150,7 +150,7 @@ def fit_and_size_per_outer(k_outer, model_name):
                 y=df.iloc[:, 5].values,
                 mode="lines",
                 name="Train",
-                line=dict(color="orange"),
+                line=dict(color="blue"),
             ),
             row=1,
             col=1,
@@ -160,7 +160,7 @@ def fit_and_size_per_outer(k_outer, model_name):
                 y=df.iloc[:, 8].values,
                 mode="lines",
                 name="Test",
-                line=dict(color="blue"),
+                line=dict(color="orange"),
             ),
             row=1,
             col=1,
@@ -169,7 +169,7 @@ def fit_and_size_per_outer(k_outer, model_name):
             go.Scatter(y=df.iloc[:, 9].values, mode="lines", name="Size"), row=1, col=2
         )
         fig.update_layout(
-            width=1000,
+            width=1600,
             height=400,
             showlegend=True,
             yaxis_range=[0, None],
@@ -273,7 +273,7 @@ def make_evolution_plots(n_rows, n_cols, slim_versions, df_log, plot_title, var=
                     x=agg["x"],
                     y=agg["mean"],
                     mode="lines",
-                    name="Validation",
+                    name="Test",
                     line=dict(color="orange"),
                     showlegend=show_legend,
                 ),
@@ -311,8 +311,8 @@ def make_evolution_plots(n_rows, n_cols, slim_versions, df_log, plot_title, var=
         title_text=plot_title,
         xaxis_title="Generations",
         yaxis_title="RMSE",
-        height=700,
-        width=1100,
+        height=1000,
+        width=1600,
         legend=dict(
             orientation="h", yanchor="bottom", y=-0.15, xanchor="center", x=0.5
         ),
@@ -335,11 +335,10 @@ def fit_or_size_per_comb(k_outer, model_name, size=False):
 
     unique_comb_list = list(set(comb_list))
     n_combinations = len(unique_comb_list)
-    #deciding on the number of cols and rows
+    # deciding on the number of cols and rows
     n_cols = ceil(n_combinations**0.3)
     n_rows = ceil(n_combinations / n_cols)
 
-    
     if not size:
         make_evolution_plots(
             n_rows=n_rows,
@@ -347,7 +346,7 @@ def fit_or_size_per_comb(k_outer, model_name, size=False):
             slim_versions=unique_comb_list,
             df_log=df_log,
             plot_title=f"{model_name} - Train vs Test Fitness",
-            )
+        )
 
     if size:
         make_evolution_plots(
@@ -368,35 +367,38 @@ For the next delivery
 """
 
 
-def niche_entropy(k_outer, model_name, skip_n_gens:int=None):
+def niche_entropy(k_outer, model_name, skip_n_gens: int = None):
     LOG_DIR = "./log/" + model_name + "/" + model_name + "_sustavianfeed"
 
-    #deciding on the number of cols and rows
+    # deciding on the number of cols and rows
     cols = ceil(k_outer**0.3)
     rows = ceil(k_outer / cols)
 
     fig = sp.make_subplots(
-        rows=rows,
-        cols=cols,
-        subplot_titles=[f"Outer Fold {i}" for i in range(k_outer)]
+        rows=rows, cols=cols, subplot_titles=[f"Outer Fold {i}" for i in range(k_outer)]
     )
 
     for i_outer in range(k_outer):
         LOG_PATH = LOG_DIR + f"_outer_{i_outer}.csv"
         df = pd.read_csv(LOG_PATH, header=None)
         param_str = df[13][0]
-        if len(param_str)>=60: #divide param_str if it is too long
+        if len(param_str) >= 60:  # divide param_str if it is too long
             param_str1 = param_str[:59]
             param_str2 = param_str[59:]
-        #skip n gnerations to plot from it on, and to make more visible the later flutuations 
+        # skip n gnerations to plot from it on, and to make more visible the later flutuations
         if skip_n_gens:
             df = df.drop(index=df.head(skip_n_gens).index)
         try:
-            div_vector_log = df.iloc[:,10].values
-            div_vector_values = np.array([float(x.replace('tensor(', '').replace(')', '')) for x in div_vector_log])
+            div_vector_log = df.iloc[:, 10].values
+            div_vector_values = np.array(
+                [
+                    float(x.replace("tensor(", "").replace(")", ""))
+                    for x in div_vector_log
+                ]
+            )
         except:
             try:
-                div_vector_values = df.iloc[:,10].values
+                div_vector_values = df.iloc[:, 10].values
             except Exception as e:
                 print(e)
 
@@ -414,15 +416,17 @@ def niche_entropy(k_outer, model_name, skip_n_gens:int=None):
             row=row,
             col=col,
         )
-        
-        if len(param_str)>=60:
-            fig.layout.annotations[i_outer].update(text=f"Outer Fold {i_outer}<br>{param_str1}<br>{param_str2}",
-                                               font=dict(size=11))
+
+        if len(param_str) >= 60:
+            fig.layout.annotations[i_outer].update(
+                text=f"Outer Fold {i_outer}<br>{param_str1}<br>{param_str2}",
+                font=dict(size=11),
+            )
         else:
-            fig.layout.annotations[i_outer].update(text=f"Outer Fold {i_outer}<br>{param_str}",
-                                               font=dict(size=11))
-        
-        
+            fig.layout.annotations[i_outer].update(
+                text=f"Outer Fold {i_outer}<br>{param_str}", font=dict(size=11)
+            )
+
     fig.update_layout(
         height=200 * rows,
         width=425 * cols,
@@ -434,12 +438,12 @@ def niche_entropy(k_outer, model_name, skip_n_gens:int=None):
     fig.show()
 
 
-def pop_fitness_diversity(k_outer, model_name, skip_n_gens:int = None):
+def pop_fitness_diversity(k_outer, model_name, skip_n_gens: int = None):
     LOG_DIR = "./log/" + model_name + "/" + model_name + "_sustavianfeed"
     for i_outer in range(k_outer):
         LOG_PATH = LOG_DIR + f"_outer_{i_outer}.csv"
         df = pd.read_csv(LOG_PATH, header=None)
-        param_str = df[13][0] #first string
+        param_str = df[13][0]  # first string
         if skip_n_gens:
             df = df.drop(index=df.head(skip_n_gens).index)
 
@@ -457,7 +461,7 @@ def pop_fitness_diversity(k_outer, model_name, skip_n_gens:int = None):
             width=900,
             yaxis_range=[0, None],
             title_text=f"{model_name} - Population Fitness Diversity<br>(Outer fold {i_outer}: Comb {param_str})",
-            title_font = dict(size=15),
+            title_font=dict(size=15),
             xaxis_title="Generation",
             yaxis_title="Fitness Standard Deviation",
             title_y=0.93,
