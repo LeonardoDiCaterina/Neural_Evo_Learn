@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from math import ceil
 import plotly.graph_objects as go
 import plotly.subplots as sp
 from plotly.subplots import make_subplots
@@ -18,7 +19,7 @@ from plotly.subplots import make_subplots
 # 10 - niche entropy
 # 11 - sd(pop.fit)
 # 12 - Log level
-# 13 - The parameter combination string
+# 13 - The parameter combination string (combination description)
 
 
 def get_comb_values(model_name):
@@ -320,7 +321,7 @@ def make_evolution_plots(n_rows, n_cols, slim_versions, df_log, plot_title, var=
     fig.show()
 
 
-def fit_and_size_per_comb(k_outer, model_name, n_rows, n_cols, size=False):
+def fit_or_size_per_comb(k_outer, model_name, size=False):
     LOG_DIR = "./log/" + model_name + "/" + model_name + "_sustavianfeed"
     df_log = []  # group all outers here
     comb_list = []  # log all unique combinations
@@ -333,27 +334,29 @@ def fit_and_size_per_comb(k_outer, model_name, n_rows, n_cols, size=False):
     df_log = pd.concat(df_log, ignore_index=True)
 
     unique_comb_list = list(set(comb_list))
+    n_combinations = len(unique_comb_list)
+    #deciding on the number of cols and rows
+    n_cols = ceil(n_combinations**0.3)
+    n_rows = ceil(n_combinations / n_cols)
 
-    assert (
-        len(unique_comb_list) == n_rows * n_cols
-    ), f"The number of combinations ({len(unique_comb_list)}) does not correspond to the grid size defined (rows/cols)."
-
-    make_evolution_plots(
-        n_rows=n_rows,
-        n_cols=n_cols,
-        slim_versions=unique_comb_list,
-        df_log=df_log,
-        plot_title=f"{model_name} - Train vs Test Fitness",
-    )
+    
+    if not size:
+        make_evolution_plots(
+            n_rows=n_rows,
+            n_cols=n_cols,
+            slim_versions=unique_comb_list,
+            df_log=df_log,
+            plot_title=f"{model_name} - Train vs Test Fitness",
+            )
 
     if size:
         make_evolution_plots(
-            n_rows,
-            n_cols,
-            unique_comb_list,
-            df_log,
+            n_rows=n_rows,
+            n_cols=n_cols,
+            slim_versions=unique_comb_list,
+            df_log=df_log,
             var="size",
-            plot_title="SLIM - Size (" + model_name + " dataset)",
+            plot_title="Size (" + model_name + " dataset)",
         )
 
 
@@ -365,12 +368,12 @@ For the next delivery
 """
 
 
-def niche_entropy(k_outer, model_name, rows=5, cols=2):
+def niche_entropy(k_outer, model_name):
     LOG_DIR = "./log/" + model_name + "/" + model_name + "_sustavianfeed"
 
-    assert (
-        rows * cols == k_outer
-    ), "The number of combinations does not correspond to the grid size defined (rows/cols)."
+    #deciding on the number of cols and rows
+    cols = ceil(k_outer**0.3)
+    rows = ceil(k_outer / cols)
 
     fig = sp.make_subplots(
         rows=rows,
@@ -383,7 +386,15 @@ def niche_entropy(k_outer, model_name, rows=5, cols=2):
         LOG_PATH = LOG_DIR + f"_outer_{i_outer}.csv"
         df = pd.read_csv(LOG_PATH, header=None)
         div_vector_log = df.iloc[:,10].values
-        #div_vector_values = np.array([float(x.replace('tensor(', '').replace(')', '')) for x in div_vector_log])
+        try:
+            div_vector_log = df.iloc[:,10].values
+            div_vector_values = np.array([float(x.replace('tensor(', '').replace(')', '')) for x in div_vector_log])
+        except:
+            try:
+                div_vector_values = df.iloc[:,10].values
+            except Exception as e:
+                print(e)
+
 
         row = (i_outer // cols) + 1
         col = (i_outer % cols) + 1
@@ -401,12 +412,10 @@ def niche_entropy(k_outer, model_name, rows=5, cols=2):
         )
         
         fig.update_layout(
-            height=150 * rows,
-            width=250 * cols,
+            height=200 * rows,
+            width=425 * cols,
             margin=dict(t=50),
             title_text=f"{model_name} - Niche Entropy/Pop Semantic Diversity (x=Generation, y=Entropy)",
-            #yaxis_range=[0,None],
-            #xaxis_title='Generation', yaxis_title='Semantic Diversity'
         )
 
     fig.show()
