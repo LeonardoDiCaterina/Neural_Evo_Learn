@@ -368,7 +368,7 @@ For the next delivery
 """
 
 
-def niche_entropy(k_outer, model_name):
+def niche_entropy(k_outer, model_name, skip_n_gens:int=None):
     LOG_DIR = "./log/" + model_name + "/" + model_name + "_sustavianfeed"
 
     #deciding on the number of cols and rows
@@ -378,14 +378,19 @@ def niche_entropy(k_outer, model_name):
     fig = sp.make_subplots(
         rows=rows,
         cols=cols,
-        # subplot_titles=[f"Combination index: {unique_setting_df[unique_setting_df[0]==comb].index[0]}"
-        #                for comb in dif_combs]
+        subplot_titles=[f"Outer Fold {i}" for i in range(k_outer)]
     )
 
     for i_outer in range(k_outer):
         LOG_PATH = LOG_DIR + f"_outer_{i_outer}.csv"
         df = pd.read_csv(LOG_PATH, header=None)
-        div_vector_log = df.iloc[:,10].values
+        param_str = df[13][0]
+        if len(param_str)>=60: #divide param_str if it is too long
+            param_str1 = param_str[:59]
+            param_str2 = param_str[59:]
+        #skip n gnerations to plot from it on, and to make more visible the later flutuations 
+        if skip_n_gens:
+            df = df.drop(index=df.head(skip_n_gens).index)
         try:
             div_vector_log = df.iloc[:,10].values
             div_vector_values = np.array([float(x.replace('tensor(', '').replace(')', '')) for x in div_vector_log])
@@ -394,7 +399,6 @@ def niche_entropy(k_outer, model_name):
                 div_vector_values = df.iloc[:,10].values
             except Exception as e:
                 print(e)
-
 
         row = (i_outer // cols) + 1
         col = (i_outer % cols) + 1
@@ -411,22 +415,33 @@ def niche_entropy(k_outer, model_name):
             col=col,
         )
         
-        fig.update_layout(
-            height=200 * rows,
-            width=425 * cols,
-            margin=dict(t=50),
-            title_text=f"{model_name} - Niche Entropy/Pop Semantic Diversity (x=Generation, y=Entropy)",
-        )
+        if len(param_str)>=60:
+            fig.layout.annotations[i_outer].update(text=f"Outer Fold {i_outer}<br>{param_str1}<br>{param_str2}",
+                                               font=dict(size=11))
+        else:
+            fig.layout.annotations[i_outer].update(text=f"Outer Fold {i_outer}<br>{param_str}",
+                                               font=dict(size=11))
+        
+        
+    fig.update_layout(
+        height=200 * rows,
+        width=425 * cols,
+        title_text=f"{model_name} - Niche Entropy/Pop Semantic Diversity (x=Generation, y=Entropy)",
+        title_y=0.97,
+        margin=dict(t=100, l=50, r=50, b=50),
+    )
 
     fig.show()
 
 
-def pop_fitness_diversity(k_outer, model_name):
+def pop_fitness_diversity(k_outer, model_name, skip_n_gens:int = None):
     LOG_DIR = "./log/" + model_name + "/" + model_name + "_sustavianfeed"
     for i_outer in range(k_outer):
         LOG_PATH = LOG_DIR + f"_outer_{i_outer}.csv"
         df = pd.read_csv(LOG_PATH, header=None)
-        param_str = df[13][0]
+        param_str = df[13][0] #first string
+        if skip_n_gens:
+            df = df.drop(index=df.head(skip_n_gens).index)
 
         fig = go.Figure()
         fig.add_trace(
@@ -439,11 +454,13 @@ def pop_fitness_diversity(k_outer, model_name):
         )
         fig.update_layout(
             height=400,
-            width=800,
-            margin=dict(t=50),
+            width=900,
             yaxis_range=[0, None],
-            title_text=f"{model_name} - Population Fitness Diversity (Outer fold {i_outer}: Comb {param_str})",
+            title_text=f"{model_name} - Population Fitness Diversity<br>(Outer fold {i_outer}: Comb {param_str})",
+            title_font = dict(size=15),
             xaxis_title="Generation",
             yaxis_title="Fitness Standard Deviation",
+            title_y=0.93,
+            margin=dict(t=80, l=50, r=80, b=50),
         )
         fig.show()
