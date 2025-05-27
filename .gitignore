@@ -1,5 +1,7 @@
 utils/__pycache_
 pyproject.toml
+uv.lock
+.python-version
 .gitignore
 tests/__pycache__
 test_notebook.ipynb
