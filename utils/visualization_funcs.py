@@ -196,7 +196,7 @@ def fit_and_size_per_outer(k_outer, model_name):
         fig.show()
 
 
-def make_evolution_plots(n_rows, n_cols, slim_versions, df_log, plot_title, var="rmse"):
+def make_evolution_plots(n_rows, n_cols, slim_versions, df_log, plot_title, var="rmse", model_name='SLIM-GSGP'):
 
     fig = make_subplots(
         rows=n_rows,
@@ -309,7 +309,7 @@ def make_evolution_plots(n_rows, n_cols, slim_versions, df_log, plot_title, var=
 
     fig.update_layout(
         title_text=plot_title,
-        xaxis_title="Generations",
+        xaxis_title="Generations" if model_name != 'NN' else "Epochs",
         yaxis_title="RMSE",
         height=1000,
         width=1600,
@@ -346,6 +346,7 @@ def fit_or_size_per_comb(k_outer, model_name, size=False):
             slim_versions=unique_comb_list,
             df_log=df_log,
             plot_title=f"{model_name} - Train vs Test Fitness",
+            model_name=model_name,
         )
 
     if size:
@@ -356,6 +357,7 @@ def fit_or_size_per_comb(k_outer, model_name, size=False):
             df_log=df_log,
             var="size",
             plot_title="Size (" + model_name + " dataset)",
+            model_name=model_name,
         )
 
 
