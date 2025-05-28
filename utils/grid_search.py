@@ -208,7 +208,7 @@ def gp_nested_cross_validation(
 
         # Add the best hyperparameters to the log .csv
         df = pd.read_csv(LOG_PATH, header=None)
-        df["params"] = str(best_hyper_combo)
+        df.iloc[:,13] = str(best_hyper_combo)
 
         df.to_csv(LOG_PATH, index=False, header=False)
 
