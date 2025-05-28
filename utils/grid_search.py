@@ -5,6 +5,7 @@ import json
 import os
 import statistics
 import pandas as pd
+import time
 
 # Third-party imports
 
@@ -206,29 +207,9 @@ def gp_nested_cross_validation(
         outer_model = gp_model(**full_params, seed=(seed + k_outer))
 
         # Add the best hyperparameters to the log .csv
-        # df = pd.read_csv(LOG_PATH, header=None)
-        # df["params"] = str(best_hyper_combo)
-        # df.to_csv(LOG_PATH, index=False, header=False)
-
         df = pd.read_csv(LOG_PATH, header=None)
-        num_cols = df.shape[1]
-        param_value = str(best_hyper_combo)
+        df["params"] = str(best_hyper_combo)
 
-        if num_cols >= 14:
-            # If there are already 14 or more columns, overwrite the 13th column (index 12)
-            df.iloc[:, 13] = param_value
-            current_columns = list(df.columns)
-
-        else:
-            # If there are fewer than 14 columns, add a new column for the parameters
-            if num_cols < 14:
-                # If there are fewer than 14 columns, add empty columns until we reach 14
-                for _ in range(13 - num_cols):
-                    df[f"col_{num_cols}"] = ""
-                    num_cols += 1
-            df["params"] = param_value
-
-        # Save back to CSV without index and without header (as per your original code)
         df.to_csv(LOG_PATH, index=False, header=False)
 
         res = {"model": outer_model}

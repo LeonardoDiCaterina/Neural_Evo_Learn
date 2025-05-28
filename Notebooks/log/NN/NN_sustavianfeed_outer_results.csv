@@ -1,0 +1,11 @@
+model,rmse_train,rmse_test,dynamic_params
+<__main__.nn_model object at 0x000001EEA859B100>,91.2063217163086,87.50824737548828,"{'hidden_layer_sizes': (3, 4), 'optimizer_name': 'RMSprop', 'learning_rate': 0.005}"
+<__main__.nn_model object at 0x000001EEA858F230>,91.51063537597656,84.82730865478516,"{'hidden_layer_sizes': (3, 4), 'optimizer_name': 'RMSprop', 'learning_rate': 0.005}"
+<__main__.nn_model object at 0x000001EEA858F360>,91.35779571533203,85.95149230957031,"{'hidden_layer_sizes': (3, 4), 'optimizer_name': 'RMSprop', 'learning_rate': 0.005}"
+<__main__.nn_model object at 0x000001EEA858F490>,91.32562255859375,86.41524505615234,"{'hidden_layer_sizes': (3, 4), 'optimizer_name': 'RMSprop', 'learning_rate': 0.005}"
+<__main__.nn_model object at 0x000001EEA858F5C0>,91.31947326660156,86.38330078125,"{'hidden_layer_sizes': (3, 4), 'optimizer_name': 'RMSprop', 'learning_rate': 0.005}"
+<__main__.nn_model object at 0x000001EEA858F6F0>,91.48094177246094,85.2203598022461,"{'hidden_layer_sizes': (3, 4), 'optimizer_name': 'RMSprop', 'learning_rate': 0.005}"
+<__main__.nn_model object at 0x000001EEA858F820>,90.2685317993164,86.66938781738281,"{'hidden_layer_sizes': (3, 4), 'optimizer_name': 'RMSprop', 'learning_rate': 0.005}"
+<__main__.nn_model object at 0x000001EEA858F950>,90.21729278564453,87.23312377929688,"{'hidden_layer_sizes': (3, 4), 'optimizer_name': 'RMSprop', 'learning_rate': 0.005}"
+<__main__.nn_model object at 0x000001EEA858FA80>,90.37014770507812,85.87208557128906,"{'hidden_layer_sizes': (3, 4), 'optimizer_name': 'RMSprop', 'learning_rate': 0.005}"
+<__main__.nn_model object at 0x000001EEA858FBB0>,90.19977569580078,87.44094848632812,"{'hidden_layer_sizes': (3, 4), 'optimizer_name': 'RMSprop', 'learning_rate': 0.005}"
