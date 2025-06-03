@@ -196,7 +196,15 @@ def fit_and_size_per_outer(k_outer, model_name):
         fig.show()
 
 
-def make_evolution_plots(n_rows, n_cols, slim_versions, df_log, plot_title, var="rmse", model_name='SLIM-GSGP'):
+def make_evolution_plots(
+    n_rows,
+    n_cols,
+    slim_versions,
+    df_log,
+    plot_title,
+    var="rmse",
+    model_name="SLIM-GSGP",
+):
 
     fig = make_subplots(
         rows=n_rows,
@@ -215,8 +223,8 @@ def make_evolution_plots(n_rows, n_cols, slim_versions, df_log, plot_title, var=
         df_plot = pd.DataFrame(
             {
                 "x": df_log[df_log[13] == sv].iloc[:, 4],
-                "rmse": df_log[df_log[13] == sv].iloc[:, 5],
-                "rmse_val": df_log[df_log[13] == sv].iloc[:, 8],
+                "rmse": abs(df_log[df_log[13] == sv].iloc[:, 5]),
+                "rmse_val": abs(df_log[df_log[13] == sv].iloc[:, 8]),
                 "size": df_log[df_log[13] == sv].iloc[:, 9],
             }
         )
@@ -309,7 +317,7 @@ def make_evolution_plots(n_rows, n_cols, slim_versions, df_log, plot_title, var=
 
     fig.update_layout(
         title_text=plot_title,
-        xaxis_title="Generations" if model_name != 'NN' else "Epochs",
+        xaxis_title="Generations" if model_name != "NN" else "Epochs",
         yaxis_title="RMSE",
         height=1000,
         width=1600,
