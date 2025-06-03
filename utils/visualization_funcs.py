@@ -4,6 +4,7 @@ from math import ceil
 import plotly.graph_objects as go
 import plotly.subplots as sp
 from plotly.subplots import make_subplots
+import matplotlib.pyplot as plt
 
 "log csvs structure"
 # 0  - Algorithm
@@ -478,3 +479,26 @@ def pop_fitness_diversity(k_outer, model_name, skip_n_gens: int = None):
             margin=dict(t=80, l=50, r=80, b=50),
         )
         fig.show()
+
+
+def plot_species(k_outer, model_name = 'NEAT'):
+    """ Visualizes speciation throughout evolution. """
+
+    for i_outer in range(k_outer):
+        LOG_PATH = LOG_DIR + f"_outer_{i_outer}.csv.pkl"
+        with open(LOG_PATH, 'rb') as file:
+            statistics = pickle.load(file)
+
+        species_sizes = statistics.get_species_sizes()
+        num_generations = len(species_sizes)
+        curves = np.array(species_sizes).T
+
+        fig, ax = plt.subplots()
+        ax.stackplot(range(num_generations), *curves)
+
+        plt.suptitle(f"{model_name} - Outer {i_outer}")
+        plt.title("Speciation")
+        plt.ylabel("Size per Species")
+        plt.xlabel("Generations")
+
+        plt.show()
