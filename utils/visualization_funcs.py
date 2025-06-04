@@ -482,12 +482,17 @@ def pop_fitness_diversity(k_outer, model_name, skip_n_gens: int = None):
         fig.show()
 
 
-def plot_species(k_outer, model_name = 'NEAT'):
-    """ Visualizes speciation throughout evolution. """
+def plot_species(k_outer, model_name="NEAT"):
+    """Visualizes speciation throughout evolution."""
 
     for i_outer in range(k_outer):
-        LOG_PATH = LOG_DIR + f"_outer_{i_outer}.csv.pkl"
-        with open(LOG_PATH, 'rb') as file:
+        LOG_PATH = (
+            "./log/"
+            + model_name
+            + "/"
+            + f"{model_name}_sustavianfeed_outer_{i_outer}.csv.pkl"
+        )
+        with open(LOG_PATH, "rb") as file:
             statistics = pickle.load(file)
 
         species_sizes = statistics.get_species_sizes()
