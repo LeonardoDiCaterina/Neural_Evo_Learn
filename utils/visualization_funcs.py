@@ -198,6 +198,26 @@ def fit_and_size_per_outer(k_outer, model_name):
         fig.show()
 
 
+# AUXILIARY FUNCTION
+def wrap_text(text, max_length=60):
+    """Wrap text into multiple lines if it exceeds max_length."""
+    if len(text) <= max_length:
+        return text
+    words = text.split()
+    lines = []
+    current_line = ""
+    
+    for word in words:
+        if len(current_line) + len(word) + 1 <= max_length:
+            current_line += f" {word}" if current_line else word
+        else:
+            lines.append(current_line)
+            current_line = word
+    if current_line:
+        lines.append(current_line)
+    return "<br>".join(lines) 
+
+# AUXILIARY FUNCTION
 def make_evolution_plots(
     n_rows,
     n_cols,
@@ -210,12 +230,15 @@ def make_evolution_plots(
     horizontal_spacing=None,
     height=None,
     width=None,
+    title_y=None,
+    top_margin=None,
 ):
+    wrapped_titles = [wrap_text(str(sv)) for sv in slim_versions]
 
     fig = make_subplots(
         rows=n_rows,
         cols=n_cols,
-        subplot_titles=[f"{i}" for i in slim_versions],
+        subplot_titles=wrapped_titles,
         vertical_spacing=0.2 if not vertical_spacing else vertical_spacing,
         horizontal_spacing=0.2 if not horizontal_spacing else horizontal_spacing,
     )
@@ -323,6 +346,8 @@ def make_evolution_plots(
 
     fig.update_layout(
         title_text=plot_title,
+        title_y=0.98 if title_y is None else title_y,
+        margin=dict(t=100, l=50, r=50, b=100) if top_margin is None else dict(t=top_margin, l=50, r=50, b=100),
         xaxis_title="Generations" if model_name != "NN" else "Epochs",
         yaxis_title="RMSE",
         height=1000 if height is None else height,
@@ -335,7 +360,8 @@ def make_evolution_plots(
     fig.show()
 
 
-def fit_or_size_per_comb(k_outer, model_name, size=False, vertical_spacing=None, horizontal_spacing=None, height=None, width=None):
+def fit_or_size_per_comb(k_outer, model_name, size=False, vertical_spacing=None, horizontal_spacing=None,
+                         height=None, width=None, title_y=None, top_margin=None):
     LOG_DIR = "./log/" + model_name + "/" + model_name + "_sustavianfeed"
     df_log = []  # group all outers here
     comb_list = []  # log all unique combinations
@@ -366,6 +392,8 @@ def fit_or_size_per_comb(k_outer, model_name, size=False, vertical_spacing=None,
             horizontal_spacing=horizontal_spacing,
             height=height,
             width=width,
+            title_y=title_y,
+            top_margin=top_margin,
         )
 
     if size:
@@ -381,6 +409,8 @@ def fit_or_size_per_comb(k_outer, model_name, size=False, vertical_spacing=None,
             horizontal_spacing=horizontal_spacing,
             height=height,
             width=width,
+            title_y=title_y,
+            top_margin=top_margin,
         )
 
 
