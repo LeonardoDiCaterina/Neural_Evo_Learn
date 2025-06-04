@@ -206,6 +206,8 @@ def make_evolution_plots(
     plot_title,
     var="rmse",
     model_name="SLIM-GSGP",
+    height=None,
+    width=None,
 ):
 
     fig = make_subplots(
@@ -321,8 +323,8 @@ def make_evolution_plots(
         title_text=plot_title,
         xaxis_title="Generations" if model_name != "NN" else "Epochs",
         yaxis_title="RMSE",
-        height=1000,
-        width=1600,
+        height=1000 if not height else height,
+        width=1600 if not width else width,
         legend=dict(
             orientation="h", yanchor="bottom", y=-0.15, xanchor="center", x=0.5
         ),
@@ -331,7 +333,7 @@ def make_evolution_plots(
     fig.show()
 
 
-def fit_or_size_per_comb(k_outer, model_name, size=False):
+def fit_or_size_per_comb(k_outer, model_name, size=False, height=None, weight=None):
     LOG_DIR = "./log/" + model_name + "/" + model_name + "_sustavianfeed"
     df_log = []  # group all outers here
     comb_list = []  # log all unique combinations
@@ -357,6 +359,8 @@ def fit_or_size_per_comb(k_outer, model_name, size=False):
             df_log=df_log,
             plot_title=f"{model_name} - Train vs Test Fitness",
             model_name=model_name,
+            height=height,
+            weight=weight
         )
 
     if size:
@@ -368,6 +372,8 @@ def fit_or_size_per_comb(k_outer, model_name, size=False):
             var="size",
             plot_title="Size (" + model_name + " dataset)",
             model_name=model_name,
+            height=height,
+            weight=weight
         )
 
 
