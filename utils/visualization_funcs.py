@@ -206,6 +206,8 @@ def make_evolution_plots(
     plot_title,
     var="rmse",
     model_name="SLIM-GSGP",
+    vertical_spacing=None,
+    horizontal_spacing=None,
     height=None,
     width=None,
 ):
@@ -214,8 +216,8 @@ def make_evolution_plots(
         rows=n_rows,
         cols=n_cols,
         subplot_titles=[f"{i}" for i in slim_versions],
-        vertical_spacing=0.2,
-        horizontal_spacing=0.2,
+        vertical_spacing=0.2 if not vertical_spacing else vertical_spacing,
+        horizontal_spacing=0.2 if not horizontal_spacing else horizontal_spacing,
     )
 
     for i, sv in enumerate(slim_versions):
@@ -323,8 +325,8 @@ def make_evolution_plots(
         title_text=plot_title,
         xaxis_title="Generations" if model_name != "NN" else "Epochs",
         yaxis_title="RMSE",
-        height=1000 if not height else height,
-        width=1600 if not width else width,
+        height=1000 if height is None else height,
+        width=1600 if width is None else width,
         legend=dict(
             orientation="h", yanchor="bottom", y=-0.15, xanchor="center", x=0.5
         ),
@@ -333,7 +335,7 @@ def make_evolution_plots(
     fig.show()
 
 
-def fit_or_size_per_comb(k_outer, model_name, size=False, height=None, weight=None):
+def fit_or_size_per_comb(k_outer, model_name, size=False, vertical_spacing=None, horizontal_spacing=None, height=None, width=None):
     LOG_DIR = "./log/" + model_name + "/" + model_name + "_sustavianfeed"
     df_log = []  # group all outers here
     comb_list = []  # log all unique combinations
@@ -347,6 +349,7 @@ def fit_or_size_per_comb(k_outer, model_name, size=False, height=None, weight=No
 
     unique_comb_list = list(set(comb_list))
     n_combinations = len(unique_comb_list)
+
     # deciding on the number of cols and rows
     n_cols = ceil(n_combinations**0.3)
     n_rows = ceil(n_combinations / n_cols)
@@ -359,8 +362,10 @@ def fit_or_size_per_comb(k_outer, model_name, size=False, height=None, weight=No
             df_log=df_log,
             plot_title=f"{model_name} - Train vs Test Fitness",
             model_name=model_name,
+            vertical_spacing=vertical_spacing,
+            horizontal_spacing=horizontal_spacing,
             height=height,
-            weight=weight
+            width=width,
         )
 
     if size:
@@ -372,8 +377,10 @@ def fit_or_size_per_comb(k_outer, model_name, size=False, height=None, weight=No
             var="size",
             plot_title="Size (" + model_name + " dataset)",
             model_name=model_name,
+            vertical_spacing=vertical_spacing,
+            horizontal_spacing=horizontal_spacing,
             height=height,
-            weight=weight
+            width=width,
         )
 
 
