@@ -1,5 +1,9 @@
 import pandas as pd
 import plotly.graph_objects as go
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pingouin as pg
+import numpy as np
 
 def train_test_all_box(model_names=['GP', 'GSGP', 'SLIM-GSGP', 'NN', 'SLIM-GSGP']):
     fig = go.Figure()
@@ -218,3 +222,34 @@ def evolution_plots_all(k_outer:int, model_names: list, show_train:bool=True, sh
     )
     fig.update_yaxes(range=[0, None])
     fig.show()
+
+def distr_with_kde(data_merged):
+    sns.set(style="darkgrid")
+    plt.figure(figsize=(10, 6))
+    sns.histplot(data=data_merged, x='rmse_test', hue='model', kde=True, palette='viridis')
+    plt.title('Distribution of RMSE for Each Model')
+    plt.show()
+
+def post_hoc_friedman_pvalues_heatmap(post_hoc_friedman: pd.DataFrame, models: list):
+    """
+    Create a heatmap of post-hoc Friedman test p-values.
+    """
+    p_values_matrix = pd.DataFrame(np.nan, index=models, columns=models)
+    for idx, row in post_hoc_friedman.iterrows():
+        model1 = row['A']
+        model2 = row['B']
+        p_val_adj = row['p-unc']
+
+        p_values_matrix.loc[model1, model2] = p_val_adj
+        p_values_matrix.loc[model2, model1] = p_val_adj
+
+    plt.figure(figsize=(6, 5)) 
+    sns.heatmap(p_values_matrix,
+                annot=True,  
+                cmap='RdYlGn_r',   
+                fmt=".3f",      
+                mask=np.triu(np.ones_like(p_values_matrix, dtype=bool)))
+
+    plt.title('Pairwise Post-Hoc P-values')
+    plt.tight_layout()
+    plt.show()
